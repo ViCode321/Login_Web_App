@@ -1,0 +1,37 @@
+﻿/* styles.css */
+body {
+    background-image: url('/Images/Fondo_login.webp');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+.container-fluid {
+    padding-top: 5rem;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.4); /* Color de fondo transparente (ajusta el último valor para controlar la opacidad) */
+    padding: 20px; /* Añade algún espacio entre el contenido y el borde */
+    border: none; /* Elimina cualquier borde del card si lo tienes */
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+footer {
+    background-color: rgba(255, 255, 255, 0.0);
+    padding: 20px 0; /* Espaciado interno en la parte superior e inferior */
+    text-align: center;
+    width: 100%;
+    position: absolute; /* Establece el pie de página como un elemento posicionado absolutamente */
+    bottom: 0; /* Fija el pie de página en la parte inferior de la ventana */
+}

@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "New_pass";
+    Layout = "~/Views/Shared/_Layout_Access.cshtml";
+}
+
+@section main{
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <h4 class="text-center">Nueva Contraseña</h4>
+                        <i class="fas fa-lock fa-6x"></i> <!-- Icono de registro -->
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="mb-3">
+                                <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Nueva Contraseña" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" id="conf_password" name="conf_password" placeholder="Confirmar Contraseña" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Recuperar Contraseña</button>
+                            @if (!string.IsNullOrEmpty(ViewBag.Error))
+                            {
+                                <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

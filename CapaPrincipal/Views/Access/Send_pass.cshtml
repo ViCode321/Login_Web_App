@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Send_pass";
+    Layout = "~/Views/Shared/_Layout_Access.cshtml";
+}
+@section main{
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <h4 class="text-center">Recuperar Constraseña</h4>
+                        <i class="fas fa-unlock-alt fa-6x"></i>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="code" name="code" placeholder="Código de Activación" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Recuperar Constraseña</button>
+                            @if (!string.IsNullOrEmpty(ViewBag.Error))
+                            {
+                                <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script src="~/Scripts/js/scripts.js"></script>
+}
+
+
+
