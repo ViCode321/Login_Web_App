@@ -1,25 +1,15 @@
 ﻿using CapaModels;
-using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace CapaDatos
 {
     public class CD_User : connection
     {
-        public bool VerifyPassword(string enteredPassword, byte[] storedPassword, byte[] salt)
-        {
-            // Encripta la contraseña ingresada por el usuario utilizando la misma clave y sal utilizada en SQL Server
-            byte[] enteredPasswordBytes = EncryptPassword(enteredPassword, salt);
+        // Clave secreta utilizada para la encriptación y desencriptación
+        private const string SecretPassphrase = "YourSecretPassphrase";
 
-            // Compara la contraseña encriptada del usuario con la contraseña almacenada
-            return CompareByteArrays(enteredPasswordBytes, storedPassword);
-        }
-
-        public bool login(string user, string pass)
+        public bool Login(string username, string password)
         {
             using (var connection = GetConnection())
             {
@@ -27,20 +17,26 @@ namespace CapaDatos
                 using (var command = new SqlCommand())
                 {
                     command.Connection = connection;
-                    command.CommandText = "SELECT Pass, Salt FROM Users WHERE Name = @user";
-                    command.Parameters.AddWithValue("@user", user);
+                    // Consulta SQL para incluir la desencriptación
+                    command.CommandText = "SELECT Name, CONVERT(NVARCHAR(100), DECRYPTBYPASSPHRASE(@SecretPassphrase, Pass)) AS DecryptedPassword, Email FROM Users WHERE Name = @username";
+                    command.Parameters.AddWithValue("@username", username);
+                    command.Parameters.AddWithValue("@SecretPassphrase", SecretPassphrase);
                     command.CommandType = CommandType.Text;
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.Read())
                     {
-                        // Obtiene la contraseña encriptada y la sal almacenada en la base de datos
-                        byte[] storedPassword = (byte[])reader["Pass"];
-                        byte[] salt = (byte[])reader["Salt"];
+                        // Obtiene la contraseña desencriptada directamente de la base de datos
+                        string decryptedPassword = reader["DecryptedPassword"].ToString();
 
                         // Verifica la contraseña ingresada por el usuario
-                        if (VerifyPassword(pass, storedPassword, salt))
+                        if (string.Equals(password, decryptedPassword))
                         {
                             // Autenticación exitosa
+                            //User.IdUser = Convert.ToInt32(reader["Id"]);
+                            Users.Name = reader["Name"].ToString();
+                            Users.Email = reader["Email"].ToString();
+                            //User.Pass = decryptedPassword;
+
                             return true;
                         }
                     }
@@ -50,43 +46,47 @@ namespace CapaDatos
             return false;
         }
 
-        // Función para encriptar la contraseña del usuario
-        public byte[] EncryptPassword(string password, byte[] salt)
+        public string GetEmailAndUsername(string username)
         {
-            using (Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes(password, salt, 10000))
+            using (var connection = GetConnection())
             {
-                using (Aes aesAlg = Aes.Create())
+                connection.Open();
+                using (var command = new SqlCommand())
                 {
-                    aesAlg.Key = deriveBytes.GetBytes(aesAlg.KeySize / 8);
-                    aesAlg.IV = deriveBytes.GetBytes(aesAlg.BlockSize / 8);
-
-                    using (MemoryStream ms = new MemoryStream())
+                    command.Connection = connection;
+                    command.CommandText = "SELECT Email, Name FROM Users;";
+                    command.CommandType = CommandType.Text;
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
                     {
-                        using (CryptoStream cs = new CryptoStream(ms, aesAlg.CreateEncryptor(), CryptoStreamMode.Write))
-                        {
-                            using (StreamWriter sw = new StreamWriter(cs))
-                            {
-                                sw.Write(password);
-                            }
-                        }
-                        return ms.ToArray();
+                        Users.Name = reader["Name"].ToString();
+                        return reader["Email"].ToString();
                     }
+                }
+            }
+            return null; // El usuario no se encontró o no tiene un correo asociado
+        }
+
+        public void UpdatePassword(string newPassword)
+        {
+            string username = Users.Name;
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+                using (var command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    // Actualiza la contraseña en la base de datos
+                    command.CommandText = "UPDATE Users SET Pass = ENCRYPTBYPASSPHRASE(@SecretPassphrase, @newPassword) WHERE Name = @username";
+                    command.Parameters.AddWithValue("@username", username);
+                    command.Parameters.AddWithValue("@SecretPassphrase", SecretPassphrase);
+                    command.Parameters.AddWithValue("@newPassword", newPassword);
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQuery();
                 }
             }
         }
 
-        // Función para comparar dos matrices de bytes
-        public bool CompareByteArrays(byte[] array1, byte[] array2)
-        {
-            if (array1 == null || array2 == null || array1.Length != array2.Length)
-                return false;
 
-            for (int i = 0; i < array1.Length; i++)
-            {
-                if (array1[i] != array2[i])
-                    return false;
-            }
-            return true;
-        }
     }
 }

@@ -1,22 +1,27 @@
 ﻿@{
-    ViewBag.Title = "Send_pass";
+    ViewBag.Title = "Create_code";
     Layout = "~/Views/Shared/_Layout_Access.cshtml";
 }
+
 @section main{
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card text-center">
                     <div class="card-header">
-                        <h4 class="text-center">Recuperar Constraseña</h4>
-                        <i class="fas fa-unlock-alt fa-6x"></i>
+                        <h4 class="text-center">Generar Código</h4>
+                        <i class="fas fa-lock fa-6x"></i> <!-- Icono de registro -->
                     </div>
                     <div class="card-body">
                         <form method="post">
                             <div class="mb-3">
-                                <input type="text" class="form-control" id="code" name="code" placeholder="Código de Activación" required>
+                                <h3>
+                                    Para resetear su contraseña, enviaremos un código de 4 dígitos a su email
+                                    ¿Desea continuar?
+                                </h3>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Recuperar Constraseña</button>
+                            <button type="submit" class="btn btn-primary btn-block" name="action" value="Cancelar">Cancelar</button>
+                            <button type="submit" class="btn btn-primary btn-block" name="action" value="Aceptar">Aceptar</button>
                             @if (!string.IsNullOrEmpty(ViewBag.Error))
                             {
                                 <div class="alert alert-danger mt-3">@ViewBag.Error</div>
@@ -28,5 +33,4 @@
         </div>
     </div>
 }
-
 

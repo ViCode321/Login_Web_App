@@ -234,6 +234,7 @@
     <Content Include="Views\Access\New_pass.cshtml" />
     <Content Include="Views\Access\Send_pass.cshtml" />
     <Content Include="Views\Shared\_Layout_Access.cshtml" />
+    <Content Include="Views\Access\Create_code.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -270,6 +271,14 @@
     <ProjectReference Include="..\CapaDatos\CapaDatos.csproj">
       <Project>{C7496816-08E0-4F9F-AE6D-2B6C8201EEF9}</Project>
       <Name>CapaDatos</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CapaModels\CapaModelo.csproj">
+      <Project>{5dd50eb1-55a6-4a2a-b993-67e0c4c2cc28}</Project>
+      <Name>CapaModelo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CapaServicio\CapaServicio.csproj">
+      <Project>{4b3532ed-2352-468a-8856-31b815176f54}</Project>
+      <Name>CapaServicio</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

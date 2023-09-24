@@ -26,6 +26,12 @@ namespace Web_Application
             );
 
             routes.MapRoute(
+                name: "Create_code",
+                url: "Create_code",
+                defaults: new { controller = "Access", action = "Create_code" }
+            );
+
+            routes.MapRoute(
                 name: "Send_pass",
                 url: "Send_pass",
                 defaults: new { controller = "Access", action = "Send_pass" }
