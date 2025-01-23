@@ -12,8 +12,8 @@ namespace CapaPrincipal
     // Clase en la capa de aplicación
     public class EmailService
     {
-        const string USER = "soportelibreriapnt@gmail.com";
-        const string PASSWORD = "kgojkwerbvjrcgxo";
+        const string USER = "correo@gmail.com";
+        const string PASSWORD = "1234";
 
         public void EnviarCorreo(StringBuilder message, DateTime dateTime, string of, string by, string affair, out string Error)
         {
